@@ -8,8 +8,8 @@ import { portalFetch } from "@/lib/portal";
 type Mode = "enquiry" | "appointment";
 type Result = { mode: Mode; token?: string; status?: string };
 
-const inputClass = "w-full rounded-xl border border-[#e4e5dd] bg-[#fafaf7] px-4 py-3 text-sm text-[#262920] outline-none transition placeholder:text-[#a3a59c] focus:border-[#a9b48f] focus:bg-white";
-const labelClass = "block text-[10px] font-semibold uppercase tracking-[0.14em] text-[#85877e]";
+const inputClass = "w-full rounded-xl border border-[#dbdfe7] bg-[#f6f8fb] px-4 py-3 text-sm text-[#1e222b] outline-none transition placeholder:text-[#959cac] focus:border-[#8897bb] focus:bg-white";
+const labelClass = "block text-[10px] font-semibold uppercase tracking-[0.14em] text-[#747d91]";
 
 function localDate(offsetDays = 0) {
   const date = new Date();
@@ -59,25 +59,25 @@ export default function EnquiryForm({ vehicleSlug = "", vehicleName, appointment
 
   if (result) {
     return (
-      <div className="rounded-2xl border border-[#dfe7cc] bg-[#f5f8ec] p-6 text-center" role="status">
-        <CheckCircle2 size={30} className="mx-auto text-[#6f8a3d]" />
-        <h3 className="mt-3 text-lg font-semibold tracking-[-0.03em] text-[#2c3127]">{result.mode === "enquiry" ? "Message received" : "Request received"}</h3>
-        <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-[#6c7063]">
+      <div className="rounded-2xl border border-[#c7d2ec] bg-[#eaeffa] p-6 text-center" role="status">
+        <CheckCircle2 size={30} className="mx-auto text-[#2e4e99]" />
+        <h3 className="mt-3 text-lg font-semibold tracking-[-0.03em] text-[#252933]">{result.mode === "enquiry" ? "Message received" : "Request received"}</h3>
+        <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-[#5d6476]">
           {result.mode === "enquiry"
             ? "Thank you. A member of our team will reply shortly. We’ve emailed you a private link to follow the conversation."
             : `Thank you. We’ll confirm your ${appointmentType.toLowerCase()} shortly. We’ve emailed you a private link to follow up.`}
         </p>
-        {result.token && <Link href={`/messages/${result.token}`} className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#20231d] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#3a3e34]"><MessageSquareText size={15} /> Open the conversation</Link>}
-        <button type="button" onClick={() => setResult(null)} className="mt-4 block w-full text-xs font-semibold text-[#6c7063] underline underline-offset-4">Send another message</button>
+        {result.token && <Link href={`/messages/${result.token}`} className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#1d4ed8] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#1e40af]"><MessageSquareText size={15} /> Open the conversation</Link>}
+        <button type="button" onClick={() => setResult(null)} className="mt-4 block w-full text-xs font-semibold text-[#5d6476] underline underline-offset-4">Send another message</button>
       </div>
     );
   }
 
   return (
     <form onSubmit={submit} className="space-y-4">
-      <div role="tablist" aria-label="How can we help?" className="grid grid-cols-2 rounded-full bg-[#f1f2ec] p-1 text-xs font-semibold">
+      <div role="tablist" aria-label="How can we help?" className="grid grid-cols-2 rounded-full bg-[#eaedf4] p-1 text-xs font-semibold">
         {([["enquiry", "Ask a question", MessageSquareText], ["appointment", vehicleSlug ? "Book a test drive" : "Book a visit", CalendarDays]] as const).map(([value, label, Icon]) => (
-          <button key={value} type="button" role="tab" aria-selected={mode === value} onClick={() => setMode(value)} className={`flex items-center justify-center gap-2 rounded-full px-3 py-2.5 transition ${mode === value ? "bg-white text-[#20231d] shadow-sm" : "text-[#7b7e74] hover:text-[#20231d]"}`}>
+          <button key={value} type="button" role="tab" aria-selected={mode === value} onClick={() => setMode(value)} className={`flex items-center justify-center gap-2 rounded-full px-3 py-2.5 transition ${mode === value ? "bg-white text-[#0f172a] shadow-sm" : "text-[#6a7388] hover:text-[#1d4ed8]"}`}>
             <Icon size={14} /> {label}
           </button>
         ))}
@@ -89,7 +89,7 @@ export default function EnquiryForm({ vehicleSlug = "", vehicleName, appointment
       <label className="block space-y-2"><span className={labelClass}>Your name</span><input name="name" required minLength={2} maxLength={100} autoComplete="name" className={inputClass} placeholder="Full name" /></label>
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block space-y-2"><span className={labelClass}>Email</span><input name="email" type="email" required maxLength={200} autoComplete="email" className={inputClass} placeholder="you@example.com" /></label>
-        <label className="block space-y-2"><span className={labelClass}>Phone <span className="normal-case tracking-normal text-[#a3a59c]">(optional)</span></span><input name="phone" type="tel" maxLength={30} pattern="[+\d\s\(\)\-]*" autoComplete="tel" className={inputClass} placeholder="+260 …" /></label>
+        <label className="block space-y-2"><span className={labelClass}>Phone <span className="normal-case tracking-normal text-[#959cac]">(optional)</span></span><input name="phone" type="tel" maxLength={30} pattern="[+\d\s\(\)\-]*" autoComplete="tel" className={inputClass} placeholder="+260 …" /></label>
       </div>
 
       {mode === "appointment" && (
@@ -116,11 +116,11 @@ export default function EnquiryForm({ vehicleSlug = "", vehicleName, appointment
 
       {error && <p role="alert" className="rounded-xl bg-[#fbefe8] px-4 py-3 text-xs text-[#a3573a]">{error}</p>}
 
-      <button type="submit" disabled={pending} className="flex w-full items-center justify-center gap-2 rounded-full bg-[#20231d] px-5 py-4 text-sm font-semibold text-white transition hover:bg-[#3a3e34] disabled:cursor-not-allowed disabled:opacity-60">
+      <button type="submit" disabled={pending} className="flex w-full items-center justify-center gap-2 rounded-full bg-[#1d4ed8] px-5 py-4 text-sm font-semibold text-white transition hover:bg-[#1e40af] disabled:cursor-not-allowed disabled:opacity-60">
         {pending ? <Loader2 size={16} className="animate-spin" /> : mode === "enquiry" ? <Send size={15} /> : <CalendarDays size={15} />}
         {pending ? "Sending…" : mode === "enquiry" ? "Send message" : "Request appointment"}
       </button>
-      <p className="text-center text-[10px] leading-5 text-[#92948c]">We only use your details to respond to this request.</p>
+      <p className="text-center text-[10px] leading-5 text-[#838b9d]">We only use your details to respond to this request.</p>
     </form>
   );
 }

@@ -40,7 +40,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f8f8f5",
+  themeColor: "#1d4ed8",
 };
 
 export default async function RootLayout({
@@ -50,8 +50,8 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#f8f8f5] text-[#22251f]`}>
-        <NextTopLoader color="#b8d77b" showSpinner={false} />
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#f4f6f9] text-[#1e2026]`}>
+        <NextTopLoader color="#1d4ed8" showSpinner={false} />
         <SiteProvider settings={settings}>
           <div className="relative flex min-h-screen flex-col">
             <Navbar />

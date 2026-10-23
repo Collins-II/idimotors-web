@@ -3,7 +3,8 @@
  * Server components use the `get*` helpers (cached via ISR); browser components use `portalFetch`.
  */
 
-export const PORTAL_URL = (process.env.NEXT_IDI_PORTAL_URL || "http://localhost:3001").replace(/\/$/, "");
+// NEXT_PUBLIC_* is inlined into browser bundles; the server may use a private (e.g. internal network) URL instead.
+export const PORTAL_URL = (process.env.NEXT_PUBLIC_IDI_PORTAL_URL || process.env.NEXT_IDI_PORTAL_URL || "http://localhost:3001").replace(/\/$/, "");
 const SERVER_PORTAL_URL = (process.env.NEXT_IDI_PORTAL_URL || PORTAL_URL).replace(/\/$/, "");
 
 export type Vehicle = {
@@ -98,13 +99,13 @@ export async function getVehicle(slug: string): Promise<{ vehicle: Vehicle; rela
   }
 }
 
-export async function portalFetch<T>(path: string, init?: { method?: "GET" | "POST"; body?: unknown }): Promise<T> {
+export async function portalFetch<T>(path: string, init?: { method?: "GET" | "POST"; body?: unknown; form?: FormData }): Promise<T> {
   let response: Response;
   try {
     response = await fetch(`${PORTAL_URL}${path}`, {
-      method: init?.method ?? "GET",
-      headers: init?.body ? { "Content-Type": "application/json" } : undefined,
-      body: init?.body ? JSON.stringify(init.body) : undefined,
+      method: init?.form ? "POST" : init?.method ?? "GET",
+      headers: init?.body && !init.form ? { "Content-Type": "application/json" } : undefined,
+      body: init?.form ?? (init?.body ? JSON.stringify(init.body) : undefined),
       cache: "no-store",
     });
   } catch {
@@ -114,6 +115,29 @@ export async function portalFetch<T>(path: string, init?: { method?: "GET" | "PO
   if (!response.ok) throw new PortalError(payload?.error ?? "Something went wrong. Please try again.", response.status);
   return payload as T;
 }
+
+export const MAX_TRADE_IN_PHOTOS = 12;
+export const TRADE_IN_CONDITIONS = ["Excellent", "Good", "Fair", "Needs work"] as const;
+export type TradeInType = "Sell" | "Swap";
+export type TradeInRequest = {
+  type: TradeInType;
+  name: string; email: string; phone: string;
+  make: string; model: string; year: number; mileage: number;
+  fuel: string; transmission: string; body: string; color: string;
+  condition: (typeof TRADE_IN_CONDITIONS)[number];
+  askingPrice: number; targetVehicleSlug: string; notes: string; images: string[];
+  website: string;
+};
+export type TradeInResponse = { ok: true; id: string; token: string; threadUrl: string };
+
+/** Uploads one customer photo to the portal (Cloudinary) and returns its URL. */
+export async function uploadTradeInPhoto(file: File) {
+  const form = new FormData();
+  form.append("file", file);
+  return (await portalFetch<{ url: string }>("/api/public/uploads", { form })).url;
+}
+
+export const submitTradeIn = (request: TradeInRequest) => portalFetch<TradeInResponse>("/api/public/trade-ins", { method: "POST", body: request });
 
 export const vehicleName = (vehicle: Pick<Vehicle, "year" | "make" | "model">) => `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
 export const cssUrl = (src: string) => `url("${src.replace(/["\\\n\r]/g, (char) => encodeURIComponent(char))}")`;

@@ -4,8 +4,8 @@
   "description": "A considered collection of exceptional cars in Lusaka, Zambia.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f8f8f5",
-  "theme_color": "#f8f8f5",
+  "background_color": "#f4f6f9",
+  "theme_color": "#1d4ed8",
   "orientation": "portrait",
   "icons": [
     {
